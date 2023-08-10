@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Web.Controllers
 {
-    public class AccountController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
 
@@ -13,20 +15,15 @@ namespace ECommerce.Web.Controllers
             _accountService = accountService;
         }
 
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(AuthenticateRequest loginModel)
+        [HttpPost("Login")]
+        public async Task<ActionResult> Login(AuthenticateRequest loginModel)
         {
             if (ModelState.IsValid)
             {
                 var result = await _accountService.Authenticate(loginModel);
                 if (result.Success)
                 {
-                    return Redirect("/");
+                    return Ok(result);
                 }
                 else 
                 {
@@ -35,16 +32,13 @@ namespace ECommerce.Web.Controllers
                         ModelState.AddModelError("", error);
                     }
                 }
+                return NotFound(result);
             }
-            return View();
+            return NotFound();
+
         }
 
-        public IActionResult Register() 
-        {
-            return View();
-        }
-
-        [HttpPost]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterationModel registerModel)
         {
             if (ModelState.IsValid)
@@ -52,7 +46,7 @@ namespace ECommerce.Web.Controllers
                 var result = await _accountService.RegisterNewAccount(registerModel);
                 if (result.Success)
                 {
-                    return Redirect("/Account/Login");
+                    return Ok(result);
                 }
                 else
                 {
@@ -61,8 +55,9 @@ namespace ECommerce.Web.Controllers
                         ModelState.AddModelError("", error);
                     }
                 }
+                return UnprocessableEntity(result);
             }
-            return View();
+            return UnprocessableEntity();
         }
     }
 }

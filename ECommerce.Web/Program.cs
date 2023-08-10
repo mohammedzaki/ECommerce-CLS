@@ -2,43 +2,31 @@ using ECommerce.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using ECommerce.Core.Services;
+using ECommerce.Core.Services.Abstractions;
+using ECommerce.Core.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var services = builder.Services;
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+services.AddControllersWithViews();
 
-builder.Services.AddRazorPages();
+services.AddRazorPages();
 
-var connectionString = builder.Configuration.GetConnectionString("SqlServer");
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("ECommerce.Core"))
-);
-
-builder.Services
-    .AddDefaultIdentity<User>(options => {
-        options.SignIn.RequireConfirmedAccount = false;
-    })
-    .AddRoles<Role>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-builder.Services.ConfigureApplicationCookie(options => 
-{
-    options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-});
+builder.ConfigureECommerceAppServices();
 
 var app = builder.Build();
 
 // Run the new migration to the database
 if (app.Environment.IsDevelopment()) 
 {
-    using (var scope = app.Services.CreateScope())
+    /*using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         db.Database.Migrate();
-    }
+    }*/
 }
 
 // Configure the HTTP request pipeline.
@@ -57,6 +45,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
