@@ -22,11 +22,11 @@ var app = builder.Build();
 // Run the new migration to the database
 if (app.Environment.IsDevelopment()) 
 {
-    /*using (var scope = app.Services.CreateScope())
+    using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         db.Database.Migrate();
-    }*/
+    }
 }
 
 // Configure the HTTP request pipeline.

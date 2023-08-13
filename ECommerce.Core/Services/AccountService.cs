@@ -51,7 +51,7 @@ namespace ECommerce.Core.Services
             var user = new User()
             {
                 Email = model.Email,
-                UserName = model.Email
+                UserName = model.Username
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)

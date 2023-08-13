@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ECommerce.Core.Data.Seeding;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -36,6 +37,8 @@ namespace ECommerce.Core.Data
             builder.Entity<RoleClaim>().ToTable("RoleClaims");
             builder.Entity<UserToken>().ToTable("UserTokens");
 
+            builder.SeedRoles();
+            builder.SeedUsers();
 
         }
     }

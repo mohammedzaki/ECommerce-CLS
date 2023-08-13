@@ -10,6 +10,9 @@ namespace ECommerce.Core.Services.Models
     public class RegisterationModel
     {
         [Required]
+        public string Username { get; set; }
+
+        [Required]
         public string Email { get; set; }
 
         [Required]
